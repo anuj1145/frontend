@@ -96,38 +96,63 @@ const MenuComponent = () => {
   const [openItems, setOpenItems] = useState({}); // State to track open/closed items
 
   useEffect(() => {
-    const fetchMenus = async () => {
-      try {
-        const response = await fetch(
-          "http://menu-system.infinityfreeapp.com/api/menus"
-        );
-        const data = await response.json();
-        setMenus(data);
-      } catch (error) {
-        console.error("Error fetching menus:", error);
+  const fetchMenus = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/menus`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        // Add this if you need to send cookies
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
-    fetchMenus();
-  }, []);
+      
+      const data = await response.json();
+      setMenus(data);
+    } catch (error) {
+      console.error("Error fetching menus:", error);
+    }
+  };
+  
+  fetchMenus();
+}, []);
 
   useEffect(() => {
-    const fetchMenuItems = async () => {
-      try {
-        const response = await fetch(
-          "http://menu-system.infinityfreeapp.com/api/submenus"
-        );
-        const data = await response.json();
-        setMenuItems(data);
-      } catch (error) {
-        console.error("Error fetching menu items:", error);
+  const fetchMenuItems = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/submenus`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          // Add Authorization header if you're using authentication
+          // 'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        credentials: 'include'  // Include this if you need to send cookies
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
-    fetchMenuItems();
-  }, []);
+
+      const data = await response.json();
+      setMenuItems(data);
+    } catch (error) {
+      console.error("Error fetching menu items:", error);
+    }
+  };
+
+  fetchMenuItems();
+}, []);
 
   //   // Handle deleting a menu item
   const handleDeleteItem = (id) => {
-    fetch(`http://menu-system.infinityfreeapp.com/api/menu-items/${id}`, {
+    fetch(`/api/menu-items/${id}`, {
       method: "DELETE",
     })
       .then((response) => {
@@ -143,7 +168,7 @@ const MenuComponent = () => {
 
   // Handle editing a menu item
   const handleEditItem = (id, newTitle) => {
-    fetch(`http://menu-system.infinityfreeapp.com/api/menu-items/${id}`, {
+    fetch(`${process.env.REACT_APP_API_URL}/menu-items/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -190,7 +215,7 @@ const MenuComponent = () => {
 
     if (!menuId) {
       let name = title;
-      fetch("http://menu-system.infinityfreeapp.com/api/menus", {
+      fetch("${process.env.REACT_APP_API_URL}/menus", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -207,7 +232,7 @@ const MenuComponent = () => {
         })
         .catch((error) => alert(error));
     } else {
-      fetch("http://menu-system.infinityfreeapp.com/api/menu-items", {
+      fetch("${process.env.REACT_APP_API_URL}/menu-items", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
