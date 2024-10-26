@@ -125,7 +125,7 @@ const MenuComponent = () => {
   useEffect(() => {
   const fetchMenuItems = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/your-endpoint/submenus`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/submenus`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -232,7 +232,7 @@ const MenuComponent = () => {
         })
         .catch((error) => alert(error));
     } else {
-      fetch("${process.env.REACT_APP_API_URL}/your-endpoint/menu-items", {
+      fetch("${process.env.REACT_APP_API_URL}/menu-items", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
