@@ -96,30 +96,59 @@ const MenuComponent = () => {
   const [openItems, setOpenItems] = useState({}); // State to track open/closed items
 
   useEffect(() => {
-    const fetchMenus = async () => {
-      try {
-        const response = await fetch("${process.env.REACT_APP_API_URL}/menus");
-        const data = await response.json();
-        setMenus(data);
-      } catch (error) {
-        console.error("Error fetching menus:", error);
+  const fetchMenus = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/menus`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        // Add this if you need to send cookies
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
-    fetchMenus();
-  }, []);
+      
+      const data = await response.json();
+      setMenus(data);
+    } catch (error) {
+      console.error("Error fetching menus:", error);
+    }
+  };
+  
+  fetchMenus();
+}, []);
 
   useEffect(() => {
-    const fetchMenuItems = async () => {
-      try {
-        const response = await fetch("${process.env.REACT_APP_API_URL}/your-endpoint/submenus");
-        const data = await response.json();
-        setMenuItems(data);
-      } catch (error) {
-        console.error("Error fetching menu items:", error);
+  const fetchMenuItems = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/your-endpoint/submenus`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          // Add Authorization header if you're using authentication
+          // 'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        credentials: 'include'  // Include this if you need to send cookies
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
-    fetchMenuItems();
-  }, []);
+
+      const data = await response.json();
+      setMenuItems(data);
+    } catch (error) {
+      console.error("Error fetching menu items:", error);
+    }
+  };
+
+  fetchMenuItems();
+}, []);
 
   //   // Handle deleting a menu item
   const handleDeleteItem = (id) => {
